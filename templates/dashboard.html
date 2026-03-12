@@ -2,8 +2,51 @@
 <div class="content">
   <h1 style="text-align: center">Task Diary</h1>
 
+  <div class="search-container" style="margin-bottom: 20px">
+    <form
+      action="{{ url_for('tasks.dashboard') }}"
+      method="GET"
+      style="display: flex; gap: 10px"
+    >
+      <input
+        type="text"
+        name="search"
+        placeholder="Search tasks..."
+        value="{{ search_query if search_query else '' }}"
+        style="
+          margin-bottom: 0;
+          flex-grow: 1;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        "
+      />
+      <button
+        type="submit"
+        class="btn-primary"
+        style="padding: 10px 15px; cursor: pointer"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      {% if search_query %}
+      <a
+        href="{{ url_for('tasks.dashboard') }}"
+        class="btn-secondary"
+        style="padding: 10px 15px; text-decoration: none; display: inline-block"
+        >Clear</a
+      >
+      {% endif %}
+    </form>
+  </div>
+
   {% if tasks|length < 1 %}
-  <h4>Create Tasks Firstly</h4>
+  <div style="text-align: center; padding: 20px">
+    {% if search_query %}
+    <h4>No tasks found matching "{{ search_query }}"</h4>
+    {% else %}
+    <h4>Create Tasks Firstly</h4>
+    {% endif %}
+  </div>
   {% else %}
   <table>
     <tr>

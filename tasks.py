@@ -7,10 +7,14 @@ tasks_bp = Blueprint('tasks', __name__)
 @tasks_bp.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
-        return redirect(url_for('auth.login'))
-    
-    tasks = Todo.query.filter_by(user_id=session['user_id']).order_by(Todo.completed.asc(), Todo.date_created.desc()).all()
-    return render_template('dashboard.html', name=session['user_name'], tasks=tasks)
+        return redirect(url_for('auth.login'))    
+    search_query = request.args.get('search', '')
+    query = Todo.query.filter_by(user_id=session['user_id'])
+    if search_query:
+        query = query.filter(Todo.content.contains(search_query))
+        
+    tasks = query.order_by(Todo.completed.asc(), Todo.date_created.desc()).all()
+    return render_template('dashboard.html', name=session['user_name'], tasks=tasks, search_query=search_query)
 
 @tasks_bp.route('/add', methods=['POST'])
 def add():
