@@ -16,8 +16,8 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'mysecret')
 user = os.getenv('MYSQL_USER')
 password = os.getenv('MYSQL_PASSWORD')
 host = os.getenv('MYSQL_HOST')
-port = os.getenv('MYSQL_PORT', '17449')
-database = os.getenv('MYSQL_DB')
+port = os.getenv('MYSQL_PORT', '4000')
+database = os.getenv('MYSQL_DB', 'test')
 
 safe_password = urllib.parse.quote_plus(password) if password else ""
 
@@ -26,8 +26,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "pool_pre_ping": True,
     "connect_args": {
-        "ssl": {"fake_flag_to_enable_tls": True},
-        "auth_plugin": "mysql_native_password"
+        "ssl": {"min_version": "TLSv1.2"}
     }
 }
 
@@ -36,7 +35,6 @@ db.init_app(app)
 with app.app_context():
     try:
         db.create_all()
-        db.session.execute(text('SELECT 1'))
     except Exception as e:
         pass
 
