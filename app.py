@@ -26,9 +26,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "pool_pre_ping": True,
     "connect_args": {
-        "ssl": {
-            "ca": "/etc/ssl/certs/ca-certificates.crt"
-        }
+        "ssl": {"fake_flag_to_enable_tls": True} 
     }
 }
 
