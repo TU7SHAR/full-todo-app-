@@ -13,14 +13,21 @@ app.config['WTF_CSRF_ENABLED'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'mysecret')
 
 user = os.getenv('MYSQL_USER')
-password = urllib.parse.quote_plus(os.getenv('MYSQL_PASSWORD'))
+password = os.getenv('MYSQL_PASSWORD')
 host = os.getenv('MYSQL_HOST')
 port = os.getenv('MYSQL_PORT', '17449')
 database = os.getenv('MYSQL_DB')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}?ssl_disabled=False"
+# Use urllib.parse.quote to safely encode the password characters like @ or _
+safe_password = urllib.parse.quote(password) if password else ""
+
+# Aiven requires SSL. Adding 'ssl_mode=REQUIRED' directly in the URI is the most reliable method.
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{user}:{safe_password}@{host}:{port}/{database}?ssl_mode=REQUIRED"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "pool_pre_ping": True,
+    "connect_args": {"ssl": {"fake_config": True}}
+}
 
 db.init_app(app)
 
