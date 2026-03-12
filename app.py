@@ -26,7 +26,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "pool_pre_ping": True,
     "connect_args": {
-        "ssl": {"fake_flag_to_enable_tls": True} 
+        "ssl": {"fake_flag_to_enable_tls": True},
+        "auth_plugin": "mysql_native_password"
     }
 }
 
