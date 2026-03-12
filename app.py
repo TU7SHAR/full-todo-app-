@@ -5,6 +5,7 @@ from models import db
 from auth import auth_bp
 from tasks import tasks_bp 
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 load_dotenv()
 
@@ -18,10 +19,8 @@ host = os.getenv('MYSQL_HOST')
 port = os.getenv('MYSQL_PORT', '17449')
 database = os.getenv('MYSQL_DB')
 
-# Safe encoding for special characters
 safe_password = urllib.parse.quote_plus(password) if password else ""
 
-# We remove the ?ssl_mode=... from the string and put it in connect_args instead
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{user}:{safe_password}@{host}:{port}/{database}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
@@ -44,5 +43,17 @@ def index():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        try:
+            # Create tables
+            db.create_all()
+            # Test connection
+            db.session.execute(text('SELECT 1'))
+            print("\n" + "="*30)
+            print("DATABASE CONNECTED SUCCESSFULLY!")
+            print("="*30 + "\n")
+        except Exception as e:
+            print("\n" + "!"*30)
+            print(f"DATABASE CONNECTION FAILED: {e}")
+            print("!"*30 + "\n")
+            
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
