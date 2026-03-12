@@ -18,15 +18,19 @@ host = os.getenv('MYSQL_HOST')
 port = os.getenv('MYSQL_PORT', '17449')
 database = os.getenv('MYSQL_DB')
 
-# Use urllib.parse.quote to safely encode the password characters like @ or _
-safe_password = urllib.parse.quote(password) if password else ""
+# Safe encoding for special characters
+safe_password = urllib.parse.quote_plus(password) if password else ""
 
-# Aiven requires SSL. Adding 'ssl_mode=REQUIRED' directly in the URI is the most reliable method.
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{user}:{safe_password}@{host}:{port}/{database}?ssl_mode=REQUIRED"
+# We remove the ?ssl_mode=... from the string and put it in connect_args instead
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{user}:{safe_password}@{host}:{port}/{database}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "pool_pre_ping": True,
-    "connect_args": {"ssl": {"fake_config": True}}
+    "connect_args": {
+        "ssl": {
+            "ca": "/etc/ssl/certs/ca-certificates.crt"
+        }
+    }
 }
 
 db.init_app(app)
