@@ -1,0 +1,57 @@
+{% extends 'base.html' %} {% block body %}
+<div class="content">
+  <h1 style="text-align: center">Task Diary</h1>
+
+  {% if tasks|length < 1 %}
+  <h4>Create Tasks Firstly</h4>
+  {% else %}
+  <table>
+    <tr>
+      <th>Status</th>
+      <th>Task</th>
+      <th>Added</th>
+      <th>Actions</th>
+    </tr>
+    {% for task in tasks %}
+    <tr class="{{ 'completed-row' if task.completed == 1 }}">
+      <td>
+        <a href="{{ url_for('tasks.toggle', id=task.id) }}" class="check-link">
+          {% if task.completed == 1 %}
+          <i class="fa-solid fa-circle-check" style="color: #2b8a3e"></i>
+          {% else %}
+          <i class="fa-regular fa-circle" style="color: #adb5bd"></i>
+          {% endif %}
+        </a>
+      </td>
+      <td class="task-text">{{ task.content }}</td>
+      <td>{{ task.date_created.strftime('%b %d') }}</td>
+      <td>
+        <a
+          href="{{ url_for('tasks.update', id=task.id) }}"
+          class="icon-btn edit-btn"
+          ><i class="fa-solid fa-pen-to-square"></i
+        ></a>
+        <a
+          href="{{ url_for('tasks.delete', id=task.id) }}"
+          class="icon-btn delete-btn"
+          ><i class="fa-solid fa-trash-can"></i
+        ></a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+</div>
+
+<div class="form-container">
+  <form action="{{ url_for('tasks.add') }}" method="POST" class="task-form">
+    <input
+      type="text"
+      name="content"
+      placeholder="Enter a new task..."
+      required
+    />
+    <input type="submit" value="ADD TASK" />
+  </form>
+</div>
+{% endblock %}

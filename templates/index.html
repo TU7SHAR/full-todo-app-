@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title %}Welcome | Task Diary{% endblock %} {%
+block body %}
+<div class="content" style="text-align: center">
+  {% if session.get('user_name') %}
+  <h1>Welcome back, {{ session['user_name'] }}!</h1>
+  <p>You have tasks waiting for you.</p>
+  <div style="margin-top: 20px">
+    <a href="{{ url_for('tasks.dashboard') }}" class="btn-primary"
+      >View My Diary</a
+    >
+  </div>
+  {% else %}
+  <h1>Organize Your Life</h1>
+  <p>A simple, secure way to track your daily tasks.</p>
+  <div style="margin-top: 20px">
+    <a
+      href="{{ url_for('auth.login') }}"
+      class="btn-primary"
+      style="margin-right: 10px"
+      >Login</a
+    >
+    <a href="{{ url_for('auth.register') }}" class="btn-secondary">Join Now</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
