@@ -32,6 +32,13 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 
 db.init_app(app)
 
+with app.app_context():
+    try:
+        db.create_all()
+        db.session.execute(text('SELECT 1'))
+    except Exception as e:
+        pass
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(tasks_bp)
 
@@ -40,18 +47,4 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    with app.app_context():
-        try:
-            # Create tables
-            db.create_all()
-            # Test connection
-            db.session.execute(text('SELECT 1'))
-            print("\n" + "="*30)
-            print("DATABASE CONNECTED SUCCESSFULLY!")
-            print("="*30 + "\n")
-        except Exception as e:
-            print("\n" + "!"*30)
-            print(f"DATABASE CONNECTION FAILED: {e}")
-            print("!"*30 + "\n")
-            
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
