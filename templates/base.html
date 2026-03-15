@@ -25,6 +25,25 @@
       {% endif %}
     </nav>
 
+    <div id="flash-container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="flash-toast flash-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+    </div>
+
     {% block body %}{% endblock %}
+
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {
+        const toasts = document.querySelectorAll(".flash-toast");
+        toasts.forEach((toast) => {
+          setTimeout(() => {
+            toast.style.opacity = "0";
+            setTimeout(() => toast.remove(), 500);
+          }, 3000);
+        });
+      });
+    </script>
   </body>
 </html>

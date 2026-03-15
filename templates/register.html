@@ -2,12 +2,29 @@
 <div class="content">
   <h2>Register</h2>
   <div class="form-container">
-    <form method="POST" action="{{ url_for('auth.register') }}">
+    <form
+      method="POST"
+      action="{{ url_for('auth.register') }}"
+      id="registerForm"
+    >
       {{ form.hidden_tag() }} {{ form.name(placeholder="Full Name") }} {{
       form.email(placeholder="Email Address") }} {{
       form.password(placeholder="Password", type="password") }}
-      <input type="submit" value="CREATE ACCOUNT" />
+      <input type="submit" value="CREATE ACCOUNT" id="registerBtn" />
     </form>
   </div>
 </div>
+
+<script>
+  // Prevents double-clicking the register button
+  document
+    .getElementById("registerForm")
+    .addEventListener("submit", function () {
+      const btn = document.getElementById("registerBtn");
+      btn.disabled = true;
+      btn.value = "CREATING...";
+      btn.style.opacity = "0.7";
+      btn.style.cursor = "not-allowed";
+    });
+</script>
 {% endblock %}

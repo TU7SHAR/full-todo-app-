@@ -2,11 +2,22 @@
 <div class="content">
   <h2>Login</h2>
   <div class="form-container">
-    <form method="POST" action="{{ url_for('auth.login') }}">
+    <form method="POST" action="{{ url_for('auth.login') }}" id="loginForm">
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password" required />
-      <input type="submit" value="LOGIN" />
+      <input type="submit" value="LOGIN" id="loginBtn" />
     </form>
   </div>
 </div>
+
+<script>
+  // Prevents double-clicking the login button
+  document.getElementById("loginForm").addEventListener("submit", function () {
+    const btn = document.getElementById("loginBtn");
+    btn.disabled = true;
+    btn.value = "LOGGING IN...";
+    btn.style.opacity = "0.7";
+    btn.style.cursor = "not-allowed";
+  });
+</script>
 {% endblock %}

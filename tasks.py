@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, session
+from flask import Blueprint, render_template, redirect, url_for, request, session, flash
 from models import db, Todo
 from datetime import datetime, timezone
 
@@ -26,6 +26,7 @@ def add():
         new_task = Todo(content=task_content, user_id=session['user_id'])
         db.session.add(new_task)
         db.session.commit()
+        flash("Task created successfully", "success")
     
     return redirect(url_for('tasks.dashboard'))
 
@@ -34,10 +35,11 @@ def delete(id):
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
     
-    task = Todo.query.get_or_404(id)
-    if task.user_id == session['user_id']:
+    task = Todo.query.get(id)
+    if task and task.user_id == session['user_id']:
         db.session.delete(task)
         db.session.commit()
+        flash("Task deleted", "success")
     
     return redirect(url_for('tasks.dashboard'))
 
@@ -46,8 +48,8 @@ def toggle(id):
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
     
-    task = Todo.query.get_or_404(id)
-    if task.user_id == session['user_id']:
+    task = Todo.query.get(id)
+    if task and task.user_id == session['user_id']:
         task.completed = 1 if task.completed == 0 else 0
         db.session.commit()
     
@@ -58,13 +60,14 @@ def update(id):
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
     
-    task = Todo.query.get_or_404(id)
-    if task.user_id != session['user_id']:
+    task = Todo.query.get(id)
+    if not task or task.user_id != session['user_id']:
         return redirect(url_for('tasks.dashboard'))
     
     if request.method == 'POST':
         task.content = request.form.get('content')
         db.session.commit()
+        flash("Task updated successfully", "success")
         return redirect(url_for('tasks.dashboard'))
     
     return render_template('update.html', task=task)

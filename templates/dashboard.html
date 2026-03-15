@@ -87,14 +87,44 @@
 </div>
 
 <div class="form-container">
-  <form action="{{ url_for('tasks.add') }}" method="POST" class="task-form">
+  <form
+    action="{{ url_for('tasks.add') }}"
+    method="POST"
+    class="task-form"
+    id="addTaskForm"
+  >
     <input
       type="text"
       name="content"
       placeholder="Enter a new task..."
       required
     />
-    <input type="submit" value="ADD TASK" />
+    <input type="submit" value="ADD TASK" id="addTaskBtn" />
   </form>
 </div>
+
+<script>
+  const addForm = document.getElementById("addTaskForm");
+  if (addForm) {
+    addForm.addEventListener("submit", function () {
+      const btn = document.getElementById("addTaskBtn");
+      btn.disabled = true;
+      btn.value = "ADDING...";
+      btn.style.opacity = "0.7";
+      btn.style.cursor = "not-allowed";
+    });
+  }
+
+  document.querySelectorAll(".icon-btn, .check-link").forEach((link) => {
+    link.addEventListener("click", function (e) {
+      if (this.classList.contains("clicked")) {
+        e.preventDefault();
+        return;
+      }
+      this.classList.add("clicked");
+      this.style.opacity = "0.5";
+      this.style.pointerEvents = "none";
+    });
+  });
+</script>
 {% endblock %}
