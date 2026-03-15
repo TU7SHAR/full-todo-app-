@@ -10,6 +10,9 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     tasks = db.relationship('Todo', backref='owner', lazy=True)
 
+    is_verified = db.Column(db.Boolean, default=False)
+    otp = db.Column(db.String(6), nullable=True)
+
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)

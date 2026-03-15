@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block body %}
+<div class="content">
+  <h2>Verify Email</h2>
+  <div class="form-container">
+    <p
+      style="
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #666;
+      "
+    >
+      We've sent a 6-digit code to your email.
+    </p>
+
+    <form method="POST" action="{{ url_for('auth.verify_otp') }}" id="otpForm">
+      <input
+        type="text"
+        name="otp"
+        placeholder="Enter 6-digit OTP"
+        pattern="\d{6}"
+        title="Please enter exactly 6 digits"
+        required
+        style="text-align: center; letter-spacing: 5px; font-size: 18px"
+      />
+
+      <button type="submit" id="otpBtn" class="btn-primary" style="width: 100%">
+        VERIFY CODE
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById("otpForm").addEventListener("submit", function () {
+    const btn = document.getElementById("otpBtn");
+    btn.disabled = true;
+    btn.innerText = "VERIFYING...";
+    btn.style.opacity = "0.7";
+    btn.style.cursor = "not-allowed";
+  });
+</script>
+{% endblock %}
