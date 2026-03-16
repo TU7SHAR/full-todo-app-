@@ -15,24 +15,24 @@ from models import db, User
 auth_bp = Blueprint('auth', __name__)
 
 def send_otp_email(user_email, otp_code):
-    """Sends a 6-digit OTP to the user for email verification."""
+#     """Sends a 6-digit OTP to the user for email verification."""
     print(f"\n--- TESTING: The OTP for {user_email} is: {otp_code} ---\n")
     
-    sender_email = os.getenv('EMAIL_USER', 'your_email@gmail.com')
-    sender_password = os.getenv('EMAIL_PASS', 'your_app_password')
+#     sender_email = os.getenv('EMAIL_USER', 'your_email@gmail.com')
+#     sender_password = os.getenv('EMAIL_PASS', 'your_app_password')
     
-    if sender_email != 'your_email@gmail.com':
-        try:
-            msg = MIMEText(f"Your Task Diary verification code is: {otp_code}")
-            msg['Subject'] = 'Task Diary - Verify Your Email'
-            msg['From'] = sender_email
-            msg['To'] = user_email
+#     if sender_email != 'your_email@gmail.com':
+#         try:
+#             msg = MIMEText(f"Your Task Diary verification code is: {otp_code}")
+#             msg['Subject'] = 'Task Diary - Verify Your Email'
+#             msg['From'] = sender_email
+#             msg['To'] = user_email
             
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-                server.login(sender_email, sender_password)
-                server.send_message(msg)
-        except Exception as e:
-            print(f"Failed to send email: {e}")
+#             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+#                 server.login(sender_email, sender_password)
+#                 server.send_message(msg)
+#         except Exception as e:
+#             print(f"Failed to send email: {e}")
 
 class RegistrationForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
